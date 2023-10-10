@@ -5,11 +5,11 @@ const router = express.Router();
 
 const moduleRoutes = [
   {
-    path: "/books",
+    path: "/book",
     route: BookRoutes,
   },
   {
-    path: "/comments",
+    path: "/comment",
     route: CommentRoutes,
   },
 ];
