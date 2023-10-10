@@ -1,75 +1,90 @@
-import { Request, RequestHandler, Response } from "express";
-import httpStatus from "http-status";
-import catchAsync from "../../../shared/catchAsync";
-import { IBook } from "./book.interface";
-import sendResponse from "../../../shared/sendResponse";
-import pick from "../../../shared/pick";
-import { BookService } from "./book.service";
-import { BookFilterableFields } from "./Book.constant";
+import { Request, Response } from "express";
+import { createBookService } from "./book.service";
 
-const createBook: RequestHandler = catchAsync(
-  async (req: Request, res: Response) => {
-    const cow = req.body;
-    const result = await BookService.createBook(cow);
-
-    sendResponse<IBook>(res, {
-      statusCode: httpStatus.OK,
+const createBook = async (req: Request, res: Response) => {
+  try {
+    const result = await createBookService.createBook(req.body);
+    res.status(200).json({
       success: true,
-      message: "Book created successfully",
+      message: "Books created successfully",
       data: result,
     });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      message: "Failed to create Book",
+    });
   }
-);
+};
+const getAllBook = async (req: Request, res: Response) => {
+  try {
+    const result = await createBookService.getAllBook();
+    res.status(200).json({
+      success: true,
+      message: "Get All Books successfully",
+      data: result,
+    });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      message: "Failed to get all Book",
+    });
+  }
+};
+const getSingleBook = async (req: Request, res: Response) => {
+  try {
+    const params = req.params.id;
+    const result = await createBookService.getSingleBook(params);
+    res.status(200).json({
+      success: true,
+      message: "Get All Books successfully",
+      data: result,
+    });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      message: "Failed to get all Book",
+    });
+  }
+};
+const updateSingleBook = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const updatedBook = req.body;
+    const result = await createBookService.updateSingleBook(id, updatedBook);
+    res.status(200).json({
+      success: true,
+      message: "updated Book successfully",
+      data: result,
+    });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      message: "Failed to update Book",
+    });
+  }
+};
+const deleteBook = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const result = await createBookService.deleteBook(id);
+    res.status(200).json({
+      success: true,
+      message: "Deleted Book successfully",
+      data: result,
+    });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      message: "Failed to delete Book",
+    });
+  }
+};
 
-const getAllBook = catchAsync(async (req: Request, res: Response) => {
-  const result = await BookService.getAllBook();
-  sendResponse<IBook[]>(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Book retrieved successfully!",
-    data: result,
-  });
-});
-
-const getSingleBook = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
-  const result = await BookService.getSingleBook(id);
-  sendResponse<IBook>(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Book retrieved successfully",
-    data: result,
-  });
-});
-
-const updateBook = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
-  const updatedData = req.body;
-  const result = await BookService.updateBook(id, updatedData);
-  sendResponse<IBook>(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Book updated successfully",
-    data: result,
-  });
-});
-const deleteBook = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
-
-  const result = await BookService.deleteBook(id);
-
-  sendResponse<IBook>(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Book deleted successfully",
-    data: result,
-  });
-});
-
-export const BookController = {
+export const createBookController = {
   createBook,
   getAllBook,
   getSingleBook,
-  updateBook,
+  updateSingleBook,
   deleteBook,
 };

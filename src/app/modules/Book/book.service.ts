@@ -1,41 +1,56 @@
-import { BookSearchableFields } from "./Book.constant";
-import { IBook, IBookFilters } from "./book.interface";
-import { Book } from "./book.model";
+import { IBook } from "./book.interface";
+import Book from "./book.model";
 
-const createBook = async (book: IBook): Promise<IBook> => {
-  const result = await Book.create(book);
-  return result;
+const createBook = async (book: IBook): Promise<IBook | null> => {
+  const createdBook = await Book.create(book);
+  if (!createdBook) {
+    throw new Error("Could not create book");
+  }
+
+  return createdBook;
 };
+const getAllBook = async (): Promise<IBook[] | null> => {
+  const createdBook = await Book.find();
+  if (!createdBook) {
+    throw new Error("Could not find any book");
+  }
 
-export const getAllBook = async (): Promise<IBook[]> => {
-  const result = await Book.find();
-  return result;
+  return createdBook;
 };
+const getSingleBook = async (params: string): Promise<IBook | null> => {
+  const createdBook = await Book.findById(params);
+  if (!createdBook) {
+    throw new Error("Could not find any book");
+  }
 
-const getSingleBook = async (id: string): Promise<IBook | null> => {
-  const result = await Book.findById(id);
-  return result;
+  return createdBook;
 };
-
-const updateBook = async (
+const updateSingleBook = async (
   id: string,
-  payload: Partial<IBook>
+  payload: IBook
 ): Promise<IBook | null> => {
-  const result = await Book.findOneAndUpdate({ _id: id }, payload, {
+  const updateBook = await Book.findByIdAndUpdate({ _id: id }, payload, {
     new: true,
   });
-  return result;
-};
+  if (!updateBook) {
+    throw new Error("Something went wrong");
+  }
 
+  return updateBook;
+};
 const deleteBook = async (id: string): Promise<IBook | null> => {
-  const result = await Book.findByIdAndDelete(id);
-  return result;
+  const deleteBook = await Book.findByIdAndDelete({ _id: id });
+  if (!deleteBook) {
+    throw new Error("Something went wrong");
+  }
+
+  return deleteBook;
 };
 
-export const BookService = {
+export const createBookService = {
   createBook,
   getAllBook,
   getSingleBook,
-  updateBook,
+  updateSingleBook,
   deleteBook,
 };

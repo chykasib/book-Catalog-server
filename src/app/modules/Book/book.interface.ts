@@ -1,17 +1,10 @@
-import { Model } from "mongoose";
+import mongoose from "mongoose";
 
-export type IBook = {
+export interface IBook {
+  _id: mongoose.Types.ObjectId;
   title: string;
   author: string;
   genre: string;
-  reviews?: string[];
-};
-
-export interface IBookFilters {
-  title?: string;
-  author?: string;
-  genre?: string;
-  searchTerm?: string;
+  publicationDate: string;
+  details: string;
 }
-
-export type BookModel = Model<IBook, Record<string, unknown>>;
