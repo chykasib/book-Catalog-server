@@ -9,7 +9,7 @@ const moduleRoutes = [
     route: BookRoutes,
   },
   {
-    path: "/comment",
+    path: "/comments",
     route: CommentRoutes,
   },
 ];
